@@ -7,6 +7,14 @@
 <meta name="description" content="Nitu Joshi's journey of purpose — MIAM Charitable Trust, its core values, Career Academies for rural and tribal youth, causes and social impact.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;family=Jost:wght@300;400;500;600&amp;display=swap">
 <link rel="stylesheet" href="assets/header.css">
+<script>
+(function () {
+  var d = document.documentElement;
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  d.classList.add("js");
+  
+})();
+</script>
 <style>
 /* ---------- header + menu (kept exactly as on the current site) ---------- */
 
@@ -31,9 +39,51 @@ img{display:block;max-width:100%}
 .jp-fade{animation:jpFade 1s cubic-bezier(.2,.75,.1,1) both}
 .jp-line{transform-origin:left;animation:jpLine 1.4s cubic-bezier(.7,0,.2,1) both}
 .jp-leaf{transform-origin:50% 100%;animation:jpLeaf 6s ease-in-out infinite}
-@supports (animation-timeline: view()){
-  .jp-rv{animation:jpFade linear both;animation-timeline:view();animation-range:entry 0% cover 26%}
-}
+
+/* ---------- page intro ---------- */
+.jp-intro-screen{display:none}
+.js .jp-intro-screen{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:var(--royal);color:var(--white);animation:introOut .9s cubic-bezier(.76,0,.24,1) .85s forwards}
+.jp-intro-mono{width:76px;height:76px;border-radius:999px;border:1px solid var(--silver);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;animation:introMono .8s cubic-bezier(.2,.7,.1,1) both}
+.jp-intro-name{overflow:hidden;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:.32em}
+.jp-intro-name span{display:block;animation:jpRise .8s cubic-bezier(.2,.7,.1,1) .15s both}
+.jp-intro-line{width:120px;height:2px;background:var(--orange);transform-origin:left;animation:jpLine .7s cubic-bezier(.7,0,.2,1) .2s both}
+@keyframes introOut{to{transform:translateY(-100%);visibility:hidden}}
+@keyframes introMono{from{opacity:0;transform:scale(.6) rotate(-20deg)}to{opacity:1;transform:none}}
+/* hero + facts wait behind the intro, then play */
+.is-loading .jp-hero,.is-loading .jp-hero *,.is-loading .jp-facts-in{animation-play-state:paused!important}
+
+/* scroll progress line */
+.jp-progress{display:none}
+.js .jp-progress{display:block;position:fixed;left:0;right:0;top:0;z-index:150;height:3px;background:var(--orange);transform:scaleX(0);transform-origin:left;pointer-events:none}
+
+/* ---------- scroll reveals (translate/scale props, so hover transforms keep working) ---------- */
+@keyframes rvUp{from{opacity:0;translate:0 46px}to{opacity:1;translate:0 0}}
+@keyframes rvLeft{from{opacity:0;translate:-70px 0}to{opacity:1;translate:0 0}}
+@keyframes rvRight{from{opacity:0;translate:70px 0}to{opacity:1;translate:0 0}}
+@keyframes rvZoom{from{opacity:0;scale:.86;translate:0 26px}to{opacity:1;scale:1;translate:0 0}}
+@keyframes rvWord{from{translate:0 110%}to{translate:0 0}}
+@keyframes rvPop{from{scale:0}60%{scale:1.15}to{scale:1}}
+@keyframes jpCurtain{from{transform:scaleY(1)}to{transform:scaleY(0)}}
+@keyframes jpKen{from{scale:1.18}to{scale:1}}
+.js .jp-rv{opacity:0}
+.js .jp-rv.is-in{animation:rvUp 1s cubic-bezier(.2,.7,.1,1) var(--d,0s) both}
+.js .jp-rv--left.is-in{animation-name:rvLeft;animation-duration:1.2s}
+.js .jp-rv--right.is-in{animation-name:rvRight;animation-duration:1.2s}
+.js .jp-rv--zoom.is-in{animation-name:rvZoom}
+/* headings rise word by word */
+.jp-w{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .08em .14em 0;margin:0 -.08em -.14em 0}
+.jp-w>span{display:inline-block;translate:0 110%}
+.jp-split.is-in .jp-w>span{animation:rvWord .95s cubic-bezier(.2,.7,.1,1) var(--d,0s) both}
+/* photos: a royal curtain lifts, photo settles */
+.js .jp-miam-img::after,.js .jp-photo::after{content:"";position:absolute;inset:0;z-index:3;background:var(--royal);transform-origin:top}
+.js .jp-miam.is-in .jp-miam-img::after,.js .jp-photo.is-in::after{animation:jpCurtain 1.1s cubic-bezier(.7,0,.2,1) calc(var(--d,0s) + .25s) both}
+.js .jp-miam.is-in .jp-miam-img img,.js .jp-photo.is-in img{animation:jpKen 1.8s cubic-bezier(.2,.6,.2,1) calc(var(--d,0s) + .25s) both}
+/* small things that pop once their card arrives */
+.js .jp-pin,.js .jp-ic,.js .jp-date{scale:0}
+.js .is-in .jp-pin,.js .is-in .jp-ic,.js .is-in .jp-date{animation:rvPop .7s cubic-bezier(.3,1.4,.5,1) calc(var(--d,0s) + .35s) both}
+.jp-fact b,.jp-stat b{font-variant-numeric:tabular-nums}
+main{overflow-x:clip}
+@media (max-width:700px){.js .jp-rv--left.is-in,.js .jp-rv--right.is-in{animation-name:rvUp}}
 
 /* ---------- hero ---------- */
 .jp-hero{position:relative;overflow:hidden;background:var(--royal);color:var(--white)}
@@ -127,6 +177,10 @@ img{display:block;max-width:100%}
 .jp-acad-card h3{margin:0 0 4px;font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:600;line-height:1.1;color:var(--royal)}
 .jp-acad-card small{display:block;margin-bottom:10px;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .jp-acad-card p{margin:0;font-size:15px;line-height:1.7;color:var(--body)}
+/* academy cards link to the MIAM Career Academy page */
+a.jp-acad-card{text-decoration:none;color:inherit}
+.jp-acad-go{display:inline-block;margin-top:14px;padding-bottom:3px;border-bottom:2px solid var(--orange);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--royal);transition:letter-spacing .5s}
+.jp-acad-card:hover .jp-acad-go{letter-spacing:.2em}
 @media (max-width:760px){.jp-acad{grid-template-columns:minmax(0,1fr)}}
 
 /* meetings */
@@ -157,6 +211,10 @@ img{display:block;max-width:100%}
 @media (max-width:560px){.jp-causes{grid-template-columns:repeat(2,minmax(0,1fr))}.jp-cause{padding:20px 16px}}
 .jp-cause h3{margin:0;font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;line-height:1.1;color:var(--royal);transition:color .6s}
 .jp-cause:hover h3{color:var(--white)}
+/* causes are links to the MIAM programme pages */
+a.jp-cause{text-decoration:none;color:inherit}
+.jp-cause-go{margin-top:auto;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);transition:color .6s,letter-spacing .5s}
+.jp-cause:hover .jp-cause-go{color:var(--silver);letter-spacing:.2em}
 
 /* impact */
 .jp-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:3px solid var(--orange);background:var(--white)}
@@ -196,6 +254,12 @@ img{display:block;max-width:100%}
 </style>
 </head>
 <body>
+<!-- <div class="jp-intro-screen" aria-hidden="true">
+  <span class="jp-intro-mono">NJ</span>
+  <span class="jp-intro-name"><span>NITU JOSHI</span></span>
+  <span class="jp-intro-line"></span>
+</div> -->
+<div class="jp-progress" aria-hidden="true"></div>
 
 <div style="background: #F5F7FA; color: #11223F; font-family: Jost, system-ui, sans-serif; font-weight: 300">
 
@@ -256,9 +320,9 @@ img{display:block;max-width:100%}
 
     <!-- 01 MIAM -->
     <section class="jp-ch" id="miam" aria-labelledby="h-miam">
-      <div class="jp-ch-side"><div class="jp-sticky jp-rv"><span class="jp-num" aria-hidden="true">01</span><h2 id="h-miam">The Trust</h2></div></div>
+      <div class="jp-ch-side"><div class="jp-sticky"><span class="jp-num jp-rv jp-rv--zoom" aria-hidden="true">01</span><h2 class="jp-split" id="h-miam">The Trust</h2></div></div>
       <div class="jp-ch-main">
-        <article class="jp-miam jp-rv">
+        <article class="jp-miam jp-rv jp-rv--zoom">
           <div class="jp-miam-img"><img src="assets/archive/2024/11/miam.jpg" alt="MIAM Charitable Trust" loading="lazy"><span>Founder · Est. 2022</span></div>
           <div class="jp-miam-body">
             <small>Founded by Nitu Joshi</small>
@@ -267,7 +331,7 @@ img{display:block;max-width:100%}
             <p class="jp-motto">“Dosro ke liye bhi jeena sikho”<span>Learning to live for others</span></p>
             <div class="jp-btns">
               <a href="https://miamcharitabletrust.com" class="jp-btn jp-btn-white">Visit MIAM Trust <span aria-hidden="true">↗</span></a>
-              <a href="https://miamcharitabletrust.com" class="jp-btn jp-btn-orange">Support a cause <span aria-hidden="true">→</span></a>
+              <a href="https://miamcharitabletrust.com/frontend/pages/donation/donation.html" class="jp-btn jp-btn-orange">Support a cause <span aria-hidden="true">→</span></a>
             </div>
           </div>
         </article>
@@ -276,40 +340,40 @@ img{display:block;max-width:100%}
 
     <!-- 02 VALUES -->
     <section class="jp-ch" id="values" aria-labelledby="h-values">
-      <div class="jp-ch-side"><div class="jp-sticky jp-rv"><span class="jp-num" aria-hidden="true">02</span><h2 id="h-values">Core values</h2></div></div>
+      <div class="jp-ch-side"><div class="jp-sticky"><span class="jp-num jp-rv jp-rv--zoom" aria-hidden="true">02</span><h2 class="jp-split" id="h-values">Core values</h2></div></div>
       <div class="jp-ch-main">
         <div class="jp-values">
           <article class="jp-value jp-rv"><b>Manavta</b><small>Humanity</small><p>Treating all sources with dignity and respect — human, animal or environment — with kindness and compassion towards all living beings.</p></article>
           <article class="jp-value jp-rv"><b>Sanskruti</b><small>Culture</small><p>Integrating ancient traditions with modern practices through cultural education, celebrations and traditional practices to ground the younger generation.</p></article>
           <article class="jp-value jp-rv"><b>Sanskar</b><small>Values</small><p>Guiding children toward sharing and caring — for family, friends, animals and the environment — to help build a safe and secure society.</p></article>
         </div>
-        <p class="jp-mission jp-rv"><small>Our mission</small>Our mission is to bridge the gap in education and basic necessities, ensuring no one is left behind due to poverty or lack of resources — providing support, education, food and care so people can live with dignity and hope. We also promote education in compassion, ethics and traditional Indian wisdom, especially among the youth, and work to ensure the welfare of destitute animals is never neglected.</p>
+        <p class="jp-mission jp-rv jp-rv--left"><small>Our mission</small>Our mission is to bridge the gap in education and basic necessities, ensuring no one is left behind due to poverty or lack of resources — providing support, education, food and care so people can live with dignity and hope. We also promote education in compassion, ethics and traditional Indian wisdom, especially among the youth, and work to ensure the welfare of destitute animals is never neglected.</p>
       </div>
     </section>
 
     <!-- 03 ACADEMIES -->
     <section class="jp-ch" id="academies" aria-labelledby="h-acad">
-      <div class="jp-ch-side"><div class="jp-sticky jp-rv"><span class="jp-num" aria-hidden="true">03</span><h2 id="h-acad">Career Academies</h2></div></div>
+      <div class="jp-ch-side"><div class="jp-sticky"><span class="jp-num jp-rv jp-rv--zoom" aria-hidden="true">03</span><h2 class="jp-split" id="h-acad">Career Academies</h2></div></div>
       <div class="jp-ch-main">
         <p class="jp-intro jp-rv">Two Career Academies, opened to empower rural and tribal youth by helping them prepare for government job examinations — closing the gap between desire and opportunity.</p>
         <div class="jp-acad">
-          <article class="jp-acad-card jp-rv">
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/educationYouthDevelopment/careerAcademy/miamAcademy/miamAcademy.html" target="_blank" rel="noopener" class="jp-acad-card jp-rv jp-rv--left" aria-label="Waghera Village Career Academy — MIAM Charitable Trust (opens in a new tab)">
             <span class="jp-pin"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
-            <div><h3>Waghera Village</h3><small>Nashik</small><p>35 km from Nashik, with limited access to higher education and skill development — a platform for students to prepare for tough government exams close to home.</p></div>
-          </article>
-          <article class="jp-acad-card jp-rv">
+            <div><h3>Waghera Village</h3><small>Nashik</small><p>35 km from Nashik, with limited access to higher education and skill development — a platform for students to prepare for tough government exams close to home.</p><span class="jp-acad-go" aria-hidden="true">Learn more ↗</span></div>
+          </a>
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/educationYouthDevelopment/careerAcademy/miamAcademy/miamAcademy.html" target="_blank" rel="noopener" class="jp-acad-card jp-rv jp-rv--right" aria-label="Chintalpeth Village Career Academy — MIAM Charitable Trust (opens in a new tab)">
             <span class="jp-pin"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
-            <div><h3>Chintalpeth Village</h3><small>Gadchiroli</small><p>Located in a tribal area, offering training programmes and study materials that encourage youth toward government service and community development.</p></div>
-          </article>
+            <div><h3>Chintalpeth Village</h3><small>Gadchiroli</small><p>Located in a tribal area, offering training programmes and study materials that encourage youth toward government service and community development.</p><span class="jp-acad-go" aria-hidden="true">Learn more ↗</span></div>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- 04 MOMENTS -->
     <section class="jp-ch" id="moments" aria-labelledby="h-moments">
-      <div class="jp-ch-side"><div class="jp-sticky jp-rv"><span class="jp-num" aria-hidden="true">04</span><h2 id="h-moments">Notable meetings &amp; moments</h2></div></div>
+      <div class="jp-ch-side"><div class="jp-sticky"><span class="jp-num jp-rv jp-rv--zoom" aria-hidden="true">04</span><h2 class="jp-split" id="h-moments">Notable meetings &amp; moments</h2></div></div>
       <div class="jp-ch-main">
-        <article class="jp-event jp-rv">
+        <article class="jp-event jp-rv jp-rv--zoom">
           <div class="jp-date" aria-hidden="true"><b>11</b><span>Dec 2024</span></div>
           <div class="jp-event-body">
             <small>Wadlapeth, Gadchiroli</small>
@@ -318,22 +382,22 @@ img{display:block;max-width:100%}
           </div>
         </article>
         <div class="jp-meet">
-          <article class="jp-meet-card jp-rv">
+          <article class="jp-meet-card jp-rv jp-rv--left">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>
             <h3>Shri Suresh Bhageria</h3>
             <p>Mumbai Mahanagar Sanghchalak (RSS) and Chairman, Bhageria Group of Industries — exploring support initiatives for women in Adivasi areas through MIAM Charitable Trust.</p>
           </article>
-          <article class="jp-meet-card jp-rv">
+          <article class="jp-meet-card jp-rv jp-rv--right">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>
             <h3>Shri Sanjay Daine</h3>
             <p>District Collector of Gadchiroli — coordinating MIAM's on-ground work in the district.</p>
           </article>
-          <article class="jp-meet-card jp-rv">
+          <article class="jp-meet-card jp-rv jp-rv--left">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>
             <h3>Sri Sri Ravi Shankar</h3>
             <p>Meeting with the spiritual leader, in keeping with MIAM's grounding in culture and values.</p>
           </article>
-          <article class="jp-meet-card jp-rv">
+          <article class="jp-meet-card jp-rv jp-rv--right">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>
             <h3>Kareena Kapoor — GJEPC India</h3>
             <p>MIAM received a donation from Bollywood actress Kareena Kapoor at an event organised by GJEPC India.</p>
@@ -345,24 +409,24 @@ img{display:block;max-width:100%}
 
     <!-- 05 CAUSES -->
     <section class="jp-ch" id="causes" aria-labelledby="h-causes">
-      <div class="jp-ch-side"><div class="jp-sticky jp-rv"><span class="jp-num" aria-hidden="true">05</span><h2 id="h-causes">Causes I stand behind</h2></div></div>
+      <div class="jp-ch-side"><div class="jp-sticky"><span class="jp-num jp-rv jp-rv--zoom" aria-hidden="true">05</span><h2 class="jp-split" id="h-causes">Causes I stand behind</h2></div></div>
       <div class="jp-ch-main">
         <p class="jp-text jp-rv">Initiatives personally backed through MIAM Charitable Trust.</p>
         <div class="jp-causes">
-          <div class="jp-cause jp-rv"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span><h3>Child Education</h3></div>
-          <div class="jp-cause jp-rv"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-8"/><path d="M12 14c-4 0-7-3-7-7 0-1 .2-2 .6-2.8C7 6 9 6.5 12 6.5s5-.5 6.4-2.3c.4.8.6 1.8.6 2.8 0 4-3 7-7 7z"/></svg></span><h3>Reforestation</h3></div>
-          <div class="jp-cause jp-rv"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="10" r="2"/><circle cx="9.5" cy="5.5" r="2"/><circle cx="14.5" cy="5.5" r="2"/><circle cx="19" cy="10" r="2"/><path d="M12 12c-3 0-6 4-6 7 0 1.5 1.5 2 3 2 1 0 2-.5 3-.5s2 .5 3 .5c1.5 0 3-.5 3-2 0-3-3-7-6-7z"/></svg></span><h3>Animal Welfare</h3></div>
-          <div class="jp-cause jp-rv"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></span><h3>Water Conservation</h3></div>
-          <div class="jp-cause jp-rv"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/></svg></span><h3>Library Revival</h3></div>
-          <div class="jp-cause jp-rv"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg></span><h3>Student Welfare</h3></div>
-          <div class="jp-cause jp-rv"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/></svg></span><h3>Women Empowerment</h3></div>
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/educationYouthDevelopment/educationYouthDevelopment.html" target="_blank" rel="noopener" class="jp-cause jp-rv jp-rv--zoom" aria-label="Child Education — MIAM Charitable Trust (opens in a new tab)"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span><h3>Child Education</h3><span class="jp-cause-go" aria-hidden="true">Learn more ↗</span></a>
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/environment/environment.html" target="_blank" rel="noopener" class="jp-cause jp-rv jp-rv--zoom" aria-label="Reforestation — MIAM Charitable Trust (opens in a new tab)"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-8"/><path d="M12 14c-4 0-7-3-7-7 0-1 .2-2 .6-2.8C7 6 9 6.5 12 6.5s5-.5 6.4-2.3c.4.8.6 1.8.6 2.8 0 4-3 7-7 7z"/></svg></span><h3>Reforestation</h3><span class="jp-cause-go" aria-hidden="true">Learn more ↗</span></a>
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/animalWelfare/animalWelfare.html" target="_blank" rel="noopener" class="jp-cause jp-rv jp-rv--zoom" aria-label="Animal Welfare — MIAM Charitable Trust (opens in a new tab)"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="10" r="2"/><circle cx="9.5" cy="5.5" r="2"/><circle cx="14.5" cy="5.5" r="2"/><circle cx="19" cy="10" r="2"/><path d="M12 12c-3 0-6 4-6 7 0 1.5 1.5 2 3 2 1 0 2-.5 3-.5s2 .5 3 .5c1.5 0 3-.5 3-2 0-3-3-7-6-7z"/></svg></span><h3>Animal Welfare</h3><span class="jp-cause-go" aria-hidden="true">Learn more ↗</span></a>
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/community/community.html" target="_blank" rel="noopener" class="jp-cause jp-rv jp-rv--zoom" aria-label="Water Conservation — MIAM Charitable Trust (opens in a new tab)"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></span><h3>Water Conservation</h3><span class="jp-cause-go" aria-hidden="true">Learn more ↗</span></a>
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/educationYouthDevelopment/careerAcademy/library/library.html" target="_blank" rel="noopener" class="jp-cause jp-rv jp-rv--zoom" aria-label="Library Revival — MIAM Charitable Trust (opens in a new tab)"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/></svg></span><h3>Library Revival</h3><span class="jp-cause-go" aria-hidden="true">Learn more ↗</span></a>
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/educationYouthDevelopment/sponsorship/sponsorship.html" target="_blank" rel="noopener" class="jp-cause jp-rv jp-rv--zoom" aria-label="Student Welfare — MIAM Charitable Trust (opens in a new tab)"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg></span><h3>Student Welfare</h3><span class="jp-cause-go" aria-hidden="true">Learn more ↗</span></a>
+          <a href="https://miamcharitabletrust.com/frontend/pages/program/womenEmpowermentAndLivelihood/womenEmpowermentAndLivelihood.html" target="_blank" rel="noopener" class="jp-cause jp-rv jp-rv--zoom" aria-label="Women Empowerment — MIAM Charitable Trust (opens in a new tab)"><span class="jp-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/></svg></span><h3>Women Empowerment</h3><span class="jp-cause-go" aria-hidden="true">Learn more ↗</span></a>
         </div>
       </div>
     </section>
 
     <!-- 06 IMPACT -->
     <section class="jp-ch" id="impact" aria-labelledby="h-impact">
-      <div class="jp-ch-side"><div class="jp-sticky jp-rv"><span class="jp-num" aria-hidden="true">06</span><h2 id="h-impact">Impact so far</h2></div></div>
+      <div class="jp-ch-side"><div class="jp-sticky"><span class="jp-num jp-rv jp-rv--zoom" aria-hidden="true">06</span><h2 class="jp-split" id="h-impact">Impact so far</h2></div></div>
       <div class="jp-ch-main">
         <div class="jp-stats jp-rv" role="list" aria-label="Social impact">
           <div class="jp-stat" role="listitem"><b>900<i>+</i></b><span>MIAM notebooks given to students, Gadchiroli sports event</span></div>
@@ -371,9 +435,9 @@ img{display:block;max-width:100%}
           <div class="jp-stat" role="listitem"><b>[N]</b><span>Animals cared for</span></div>
         </div>
         <div class="jp-photos">
-          <figure class="jp-photo jp-rv"><img src="assets/archive/2024/12/DSC04502.jpg" alt="Inter-Centre Sports Event, Gadchiroli" loading="lazy"><figcaption>Inter-Centre Sports Event, Gadchiroli</figcaption></figure>
-          <figure class="jp-photo jp-rv"><img src="assets/archive/2024/12/Notebook-1.jpg" alt="MIAM notebooks distributed" loading="lazy"><figcaption>MIAM notebooks distributed</figcaption></figure>
-          <figure class="jp-photo jp-rv"><img src="assets/archive/2024/12/DSC04749.jpg" alt="Inter-Centre Sports Event, Gadchiroli" loading="lazy"><figcaption>Inter-Centre Sports Event, Gadchiroli</figcaption></figure>
+          <figure class="jp-photo jp-rv jp-rv--left"><img src="assets/archive/2024/12/DSC04502.jpg" alt="Inter-Centre Sports Event, Gadchiroli" loading="lazy"><figcaption>Inter-Centre Sports Event, Gadchiroli</figcaption></figure>
+          <figure class="jp-photo jp-rv jp-rv--right"><img src="assets/archive/2024/12/Notebook-1.jpg" alt="MIAM notebooks distributed" loading="lazy"><figcaption>MIAM notebooks distributed</figcaption></figure>
+          <figure class="jp-photo jp-rv jp-rv--right"><img src="assets/archive/2024/12/DSC04749.jpg" alt="Inter-Centre Sports Event, Gadchiroli" loading="lazy"><figcaption>Inter-Centre Sports Event, Gadchiroli</figcaption></figure>
         </div>
       </div>
     </section>
@@ -382,8 +446,8 @@ img{display:block;max-width:100%}
 
 <a href="professional.php" class="jp-next">
   <span class="jp-next-in">
-    <span class="jp-arrow" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></svg></span>
-    <span><small>Back to Chapter I</small><strong>My Professional Journey</strong></span>
+    <span class="jp-arrow jp-rv jp-rv--zoom" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></svg></span>
+    <span><small class="jp-rv">Back to Chapter I</small><strong class="jp-split">My Professional Journey</strong></span>
   </span>
 </a>
 
@@ -423,6 +487,8 @@ img{display:block;max-width:100%}
   var bar = document.querySelector('.jp-sub');
   function place() { if (header && bar) bar.style.top = header.offsetHeight + 'px'; }
   place(); window.addEventListener('resize', place);
+  if (header) header.addEventListener('transitionend', place);
+  window.addEventListener('scroll', place, { passive: true });
   var links = Array.prototype.slice.call(document.querySelectorAll('.jp-sub a'));
   if (!('IntersectionObserver' in window) || !links.length) return;
   var byId = {};
@@ -436,6 +502,87 @@ img{display:block;max-width:100%}
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   Object.keys(byId).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+})();
+</script>
+<script>
+(function () {
+  if (!document.documentElement.classList.contains("js")) return; // reduced motion: page shows as is
+
+  // headings: wrap each word so it can rise on its own
+  document.querySelectorAll(".jp-split").forEach(function (el) {
+    var words = el.textContent.trim().split(/\s+/);
+    el.setAttribute("aria-label", words.join(" "));
+    el.textContent = "";
+    words.forEach(function (w, i) {
+      var outer = document.createElement("span"), inner = document.createElement("span");
+      outer.className = "jp-w"; outer.setAttribute("aria-hidden", "true");
+      inner.textContent = w; inner.style.setProperty("--d", i * 0.08 + "s");
+      outer.appendChild(inner); el.appendChild(outer);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+    });
+  });
+
+  // numbers count up from 0 (years like 2022 and [N] placeholders stay as they are)
+  var counters = [];
+  document.querySelectorAll(".jp-fact b, .jp-stat b").forEach(function (b) {
+    var t = b.firstChild, n = t && parseInt(t.nodeValue, 10);
+    if (!n || (n >= 1900 && n <= 2100)) return;
+    counters.push({ node: t, to: n, el: b });
+    t.nodeValue = "0";
+  });
+  function count(c) {
+    var start = null, dur = 1800;
+    function step(ts) {
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      c.node.nodeValue = String(Math.round(c.to * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  var targets = document.querySelectorAll(".jp-rv, .jp-split, .jp-fact b, .jp-stat b");
+  function reveal(el, delay) {
+    if (el.classList.contains("is-in")) return;
+    if (delay && !el.style.getPropertyValue("--d")) el.style.setProperty("--d", delay + "s");
+    el.classList.add("is-in");
+    counters.forEach(function (c) {
+      if (c.el === el) setTimeout(function () { count(c); }, Math.max(300, 2300 - performance.now()));
+    });
+  }
+  if (!("IntersectionObserver" in window)) {
+    targets.forEach(function (el) { reveal(el, 0); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      // things that appear together come in one after another
+      entries.filter(function (e) { return e.isIntersecting; }).forEach(function (e, i) {
+        reveal(e.target, Math.min(i * 0.09, 0.6));
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.12 });
+    targets.forEach(function (el) { io.observe(el); });
+  }
+
+  // scroll progress line + gentle hero parallax
+  var bar = document.querySelector(".jp-progress"), hero = document.querySelector(".jp-hero"),
+    heroText = document.querySelector(".jp-hero-text"), index = document.querySelector(".jp-index"), ticking = false;
+  function onScroll() {
+    var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight;
+    if (bar) bar.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")";
+    if (hero && y < hero.offsetHeight) {
+      if (heroText) {
+        heroText.style.translate = "0 " + y * 0.18 + "px";
+        heroText.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.9)));
+      }
+      if (index) index.style.translate = "0 " + y * -0.08 + "px";
+    }
+    ticking = false;
+  }
+  window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
+
+  var intro = document.querySelector(".jp-intro-screen");
+  if (intro) intro.addEventListener("animationend", function (e) { if (e.animationName === "introOut") intro.remove(); });
 })();
 </script>
 </body>

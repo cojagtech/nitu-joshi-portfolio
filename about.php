@@ -13,6 +13,14 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;family=Jost:wght@300;400;500;600&amp;display=swap"
     />
     <link rel="stylesheet" href="assets/header.css" />
+    <script>
+      (function () {
+        var d = document.documentElement;
+        if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        d.classList.add("js");
+        
+      })();
+    </script>
     <style>
       /* ===== Royal Silver theme + orange accent =====
    Royal Blue #173A70 · deep #102A52 · Silver #BFC7D1 · Soft White #F5F7FA · White #FFFFFF
@@ -141,14 +149,201 @@
         transform-origin: left;
         animation: abLine 1.4s cubic-bezier(0.7, 0, 0.2, 1) both;
       }
-      @supports (animation-timeline: view()) {
-        .ab-rv {
-          animation: abFade linear both;
-          animation-timeline: view();
-          animation-range: entry 0% cover 26%;
+      /* ---------- page intro (plays once when the page opens) ---------- */
+      .ab-intro {
+        display: none;
+      }
+      .js .ab-intro {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background: var(--royal);
+        color: var(--white);
+        animation: introOut 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.85s forwards;
+      }
+      .ab-intro-mono {
+        width: 76px;
+        height: 76px;
+        border-radius: 999px;
+        border: 1px solid var(--silver);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 30px;
+        font-weight: 600;
+        animation: introMono 0.8s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+      }
+      .ab-intro-name {
+        overflow: hidden;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.32em;
+      }
+      .ab-intro-name span {
+        display: block;
+        animation: abRise 0.8s cubic-bezier(0.2, 0.7, 0.1, 1) 0.15s both;
+      }
+      .ab-intro-line {
+        width: 120px;
+        height: 2px;
+        background: var(--orange);
+        transform-origin: left;
+        animation: abLine 0.7s cubic-bezier(0.7, 0, 0.2, 1) 0.2s both;
+      }
+      @keyframes introOut {
+        to {
+          transform: translateY(-100%);
+          visibility: hidden;
         }
       }
+      @keyframes introMono {
+        from {
+          opacity: 0;
+          transform: scale(0.6) rotate(-20deg);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      /* hero + facts wait behind the intro, then play */
+      .is-loading .ab-hero,
+      .is-loading .ab-hero *,
+      .is-loading .ab-facts-in {
+        animation-play-state: paused !important;
+      }
 
+      /* scroll progress line */
+      .ab-progress {
+        display: none;
+      }
+      .js .ab-progress {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 150;
+        height: 3px;
+        background: var(--orange);
+        transform: scaleX(0);
+        transform-origin: left;
+        pointer-events: none;
+      }
+
+      /* ---------- scroll reveals ----------
+         Uses the separate translate/scale properties, so card hover effects (transform) keep working. */
+      @keyframes rvUp {
+        from {
+          opacity: 0;
+          translate: 0 46px;
+        }
+        to {
+          opacity: 1;
+          translate: 0 0;
+        }
+      }
+      @keyframes rvLeft {
+        from {
+          opacity: 0;
+          translate: -70px 0;
+        }
+        to {
+          opacity: 1;
+          translate: 0 0;
+        }
+      }
+      @keyframes rvRight {
+        from {
+          opacity: 0;
+          translate: 70px 0;
+        }
+        to {
+          opacity: 1;
+          translate: 0 0;
+        }
+      }
+      @keyframes rvZoom {
+        from {
+          opacity: 0;
+          scale: 0.86;
+          translate: 0 26px;
+        }
+        to {
+          opacity: 1;
+          scale: 1;
+          translate: 0 0;
+        }
+      }
+      @keyframes rvWord {
+        from {
+          translate: 0 110%;
+        }
+        to {
+          translate: 0 0;
+        }
+      }
+      .js .ab-rv {
+        opacity: 0;
+      }
+      .js .ab-rv.is-in {
+        animation: rvUp 1s cubic-bezier(0.2, 0.7, 0.1, 1) var(--d, 0s) both;
+      }
+      .js .ab-rv--left.is-in {
+        animation-name: rvLeft;
+        animation-duration: 1.2s;
+      }
+      .js .ab-rv--right.is-in {
+        animation-name: rvRight;
+        animation-duration: 1.2s;
+      }
+      .js .ab-rv--zoom.is-in {
+        animation-name: rvZoom;
+      }
+      /* the orange line before each label draws itself in */
+      .js .ab-label::before {
+        scale: 0 1;
+        transform-origin: left;
+        transition: scale 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.15s;
+      }
+      .js .ab-label.is-in::before {
+        scale: 1 1;
+      }
+      /* headings rise word by word */
+      .ab-w {
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: bottom;
+        padding: 0 0.08em 0.14em 0;
+        margin: 0 -0.08em -0.14em 0;
+      }
+      .ab-w > span {
+        display: inline-block;
+        translate: 0 110%;
+      }
+      .ab-split.is-in .ab-w > span {
+        animation: rvWord 0.95s cubic-bezier(0.2, 0.7, 0.1, 1) var(--d, 0s) both;
+      }
+      .ab-fact b {
+        font-variant-numeric: tabular-nums;
+      }
+      /* sliding cards never cause a sideways scrollbar */
+      main {
+        overflow-x: clip;
+      }
+      @media (max-width: 700px) {
+        .js .ab-rv--left.is-in,
+        .js .ab-rv--right.is-in {
+          animation-name: rvUp;
+        }
+      }
 
       /* ---------- hero ---------- */
       .ab-hero {
@@ -228,6 +423,7 @@
         list-style: none;
       }
       .ab-roles li {
+        animation: abFade 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) both;
         padding: 9px 16px;
         border: 1px solid rgba(191, 199, 209, 0.55);
         border-radius: 999px;
@@ -238,6 +434,10 @@
         color: var(--white);
       }
 
+      .ab-roles li:nth-child(1) { animation-delay: 1.3s; }
+      .ab-roles li:nth-child(2) { animation-delay: 1.42s; }
+      .ab-roles li:nth-child(3) { animation-delay: 1.54s; }
+      .ab-roles li:nth-child(4) { animation-delay: 1.66s; }
       .ab-photo-col {
         flex: 1 1 380px;
         min-width: 0;
@@ -726,6 +926,12 @@
     </style>
   </head>
   <body>
+    <!-- <div class="ab-intro" aria-hidden="true">
+      <span class="ab-intro-mono">NJ</span>
+      <span class="ab-intro-name"><span>NITU JOSHI</span></span>
+      <span class="ab-intro-line"></span>
+    </div> -->
+    <div class="ab-progress" aria-hidden="true"></div>
     <?php $active = 'about'; include __DIR__ . '/partials/header.php'; ?>
 
     <main>
@@ -758,11 +964,7 @@
               remarkable career spanning over 25 years in business,
               entertainment and socio-cultural entrepreneurship.
             </p>
-            <ul
-              class="ab-roles ab-fade"
-              style="animation-delay: 1.3s"
-              aria-label="Roles"
-            >
+            <ul class="ab-roles" aria-label="Roles">
               <li>Creative Professional</li>
               <li>Entrepreneur</li>
               <li>Film Producer</li>
@@ -818,15 +1020,15 @@
       <section class="ab-wrap ab-sec" aria-labelledby="story-title">
         <div class="ab-story">
           <div class="ab-story-side">
-            <div class="ab-sticky ab-rv">
-              <p class="ab-label">Her Story</p>
-              <h2 class="ab-h2" id="story-title">
+            <div class="ab-sticky">
+              <p class="ab-label ab-rv">Her Story</p>
+              <h2 class="ab-h2 ab-split" id="story-title">
                 Creativity, enterprise &amp; purpose.
               </h2>
             </div>
           </div>
           <div class="ab-story-body">
-            <p class="ab-lead ab-rv">
+            <p class="ab-lead ab-rv ab-rv--right">
               With over two decades of experience in film, media and
               entertainment production, Nitu Joshi has earned recognition as a
               leading fashion and jewellery designer for prominent film,
@@ -838,16 +1040,16 @@
               such as choreographer Geeta Kapur, superstar Sanjay Dutt, Namrata
               Shirodkar, Jackie Shroff, Bhagyashree and numerous others.
             </p>
-            <div class="ab-rv">
-              <p class="ab-label" style="margin-top: 6px">
+            <div>
+              <p class="ab-label ab-rv" style="margin-top: 6px">
                 Has collaborated with
               </p>
               <div class="ab-names">
-                <span class="ab-name">Geeta Kapur</span
-                ><span class="ab-name">Sanjay Dutt</span
-                ><span class="ab-name">Namrata Shirodkar</span
-                ><span class="ab-name">Jackie Shroff</span
-                ><span class="ab-name">Bhagyashree</span>
+                <span class="ab-name ab-rv ab-rv--zoom">Geeta Kapur</span
+                ><span class="ab-name ab-rv ab-rv--zoom">Sanjay Dutt</span
+                ><span class="ab-name ab-rv ab-rv--zoom">Namrata Shirodkar</span
+                ><span class="ab-name ab-rv ab-rv--zoom">Jackie Shroff</span
+                ><span class="ab-name ab-rv ab-rv--zoom">Bhagyashree</span>
               </div>
             </div>
             <p class="ab-rv">
@@ -867,9 +1069,9 @@
       <section class="ab-journeys" aria-labelledby="journeys-title">
         <div class="ab-wrap ab-sec">
           <p class="ab-label ab-rv">Two Journeys. One Purpose.</p>
-          <h2 class="ab-h2 ab-rv" id="journeys-title">Where her work leads</h2>
+          <h2 class="ab-h2 ab-split" id="journeys-title">Where her work leads</h2>
           <div class="ab-jgrid">
-            <a href="professional.php" class="ab-jcard ab-rv">
+            <a href="professional.php" class="ab-jcard ab-rv ab-rv--left">
               <span class="ab-jnum" aria-hidden="true">01</span>
               <h3>My Professional Journey</h3>
               <p>
@@ -885,7 +1087,7 @@
                 >Explore <span aria-hidden="true">→</span></span
               >
             </a>
-            <a href="purpose.php" class="ab-jcard ab-rv">
+            <a href="purpose.php" class="ab-jcard ab-rv ab-rv--right">
               <span class="ab-jnum" aria-hidden="true">02</span>
               <h3>My Journey of Purpose</h3>
               <p>
@@ -911,44 +1113,59 @@
       <!-- VENTURES -->
       <section class="ab-wrap ab-sec" aria-labelledby="ventures-title">
         <p class="ab-label ab-rv">Ventures</p>
-        <h2 class="ab-h2 ab-rv" id="ventures-title">Built over the years</h2>
+        <h2 class="ab-h2 ab-split" id="ventures-title">Built over the years</h2>
         <div class="ab-vgrid">
-          <div class="ab-venture ab-rv">
-            <div class="ab-vtop"><span>01</span></div>
+          <a href="https://ebinaentertainment.com/" target="_blank" rel="noopener" class="ab-venture ab-rv ab-rv--zoom" aria-label="Ebina Entertainment — opens in a new tab"
+            ><div class="ab-vtop">
+              <span>01</span
+              ><svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M7 17L17 7M9 7h8v8" />
+              </svg>
+            </div>
             <div>
               <h3>Ebina Entertainment</h3>
               <small>Entertainment</small>
-            </div>
-          </div>
-          <div class="ab-venture ab-rv">
+            </div></a
+          >
+          <div class="ab-venture ab-rv ab-rv--zoom">
             <div class="ab-vtop"><span>02</span></div>
             <div>
               <h3>Vedansh Entertainment</h3>
               <small>Entertainment</small>
             </div>
           </div>
-          <div class="ab-venture ab-rv">
+          <div class="ab-venture ab-rv ab-rv--zoom">
             <div class="ab-vtop"><span>03</span></div>
             <div>
               <h3>Aayush Telefilms</h3>
               <small>Television &amp; films</small>
             </div>
           </div>
-          <div class="ab-venture ab-rv">
+          <div class="ab-venture ab-rv ab-rv--zoom">
             <div class="ab-vtop"><span>04</span></div>
             <div>
               <h3>Ebina Jewel</h3>
               <small>Jewellery</small>
             </div>
           </div>
-          <div class="ab-venture ab-rv">
+          <div class="ab-venture ab-rv ab-rv--zoom">
             <div class="ab-vtop"><span>05</span></div>
             <div>
               <h3>Ebina Hotel</h3>
               <small>Hospitality</small>
             </div>
           </div>
-          <a href="purpose.php" class="ab-venture ab-rv"
+          <a href="https://www.miamcharitabletrust.com/" target="_blank" rel="noopener" class="ab-venture ab-rv ab-rv--zoom" aria-label="MIAM Charitable Trust — opens in a new tab"
             ><div class="ab-vtop">
               <span>06</span
               ><svg
@@ -977,8 +1194,8 @@
       <section class="ab-next" aria-label="Continue">
         <div class="ab-wrap">
           <div class="ab-next-in">
-            <h2 class="ab-rv">Continue the story.</h2>
-            <div class="ab-btns ab-rv">
+            <h2 class="ab-split">Continue the story.</h2>
+            <div class="ab-btns ab-rv ab-rv--right">
               <a href="professional.php" class="ab-btn ab-btn-solid"
                 >My Professional Journey <span aria-hidden="true">→</span></a
               >
@@ -1001,6 +1218,101 @@
       </span>
     </footer>
 
+    <script>
+      (function () {
+        var root = document.documentElement;
+        if (!root.classList.contains("js")) return; // reduced motion: page shows as is
+
+        // headings: wrap each word so it can rise on its own
+        document.querySelectorAll(".ab-split").forEach(function (el) {
+          var words = el.textContent.trim().split(/\s+/);
+          el.setAttribute("aria-label", words.join(" "));
+          el.textContent = "";
+          words.forEach(function (w, i) {
+            var outer = document.createElement("span"), inner = document.createElement("span");
+            outer.className = "ab-w";
+            outer.setAttribute("aria-hidden", "true");
+            inner.textContent = w;
+            inner.style.setProperty("--d", i * 0.08 + "s");
+            outer.appendChild(inner);
+            el.appendChild(outer);
+            if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+          });
+        });
+
+        // facts: count up from 0
+        var counters = [];
+        document.querySelectorAll(".ab-fact b").forEach(function (b) {
+          var t = b.firstChild, n = t && parseInt(t.nodeValue, 10);
+          if (!n) return;
+          t.nodeValue = "0";
+          counters.push({ node: t, to: n, el: b });
+        });
+        function count(c) {
+          var start = null, dur = 1700;
+          function step(ts) {
+            if (start === null) start = ts;
+            var p = Math.min(1, (ts - start) / dur), e = 1 - Math.pow(1 - p, 3);
+            c.node.nodeValue = String(Math.round(c.to * e));
+            if (p < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        }
+
+        var targets = document.querySelectorAll(".ab-rv, .ab-label, .ab-split, .ab-fact b");
+        function reveal(el, delay) {
+          if (el.classList.contains("is-in")) return;
+          if (delay && !el.style.getPropertyValue("--d")) el.style.setProperty("--d", delay + "s");
+          el.classList.add("is-in");
+          counters.forEach(function (c) {
+            // start once the facts strip has faded in
+            if (c.el === el) setTimeout(function () { count(c); }, Math.max(0, 2500 - performance.now()));
+          });
+        }
+        if (!("IntersectionObserver" in window)) {
+          targets.forEach(function (el) { reveal(el, 0); });
+        } else {
+          var io = new IntersectionObserver(function (entries) {
+            // things that appear together come in one after another
+            var shown = entries.filter(function (e) { return e.isIntersecting; }).map(function (e) { return e.target; });
+            shown.forEach(function (el, i) {
+              reveal(el, Math.min(i * 0.09, 0.6));
+              io.unobserve(el);
+            });
+          }, { rootMargin: "0px 0px -10% 0px", threshold: 0.12 });
+          targets.forEach(function (el) { io.observe(el); });
+        }
+
+        // scroll progress line + gentle hero parallax
+        var bar = document.querySelector(".ab-progress"),
+          hero = document.querySelector(".ab-hero"),
+          heroText = document.querySelector(".ab-hero-text"),
+          photo = document.querySelector(".ab-photo"),
+          ticking = false;
+        function onScroll() {
+          var y = window.scrollY, max = document.documentElement.scrollHeight - window.innerHeight;
+          if (bar) bar.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")";
+          if (hero && y < hero.offsetHeight) {
+            if (heroText) {
+              heroText.style.translate = "0 " + y * 0.18 + "px";
+              heroText.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.9)));
+            }
+            if (photo) photo.style.translate = "0 " + y * -0.08 + "px";
+          }
+          ticking = false;
+        }
+        window.addEventListener("scroll", function () {
+          if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+        }, { passive: true });
+        onScroll();
+
+        // remove the intro after it slides away
+        var intro = document.querySelector(".ab-intro");
+        if (intro) intro.addEventListener("animationend", function (e) {
+          if (e.animationName === "introOut") intro.remove();
+        });
+      })();
+    </script>
     <script src="assets/nav.js"></script>
   </body>
 </html>

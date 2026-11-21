@@ -7,6 +7,14 @@
 <meta name="description" content="Nitu Joshi's professional journey — fashion, costume and jewellery design, film and television production with Ebina Entertainment, Vedansh Entertainment and Aayush Telefilms, and the Ebina ventures.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;family=Jost:wght@300;400;500;600&amp;display=swap">
 <link rel="stylesheet" href="assets/header.css">
+<script>
+(function () {
+  var d = document.documentElement;
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  d.classList.add("js");
+  
+})();
+</script>
 <style>
 /* ===== Royal Silver theme + orange accent =====
    Royal #173A70 · deep #102A52 · Silver #BFC7D1 · Soft White #F5F7FA · White #FFFFFF · Orange #C9792F (hover #B2660F) */
@@ -33,10 +41,59 @@ img{display:block;max-width:100%}
 .pj-mask>span{display:block;animation:pjRise 1.2s cubic-bezier(.2,.75,.1,1) both}
 .pj-fade{animation:pjFade 1s cubic-bezier(.2,.75,.1,1) both}
 .pj-line{transform-origin:left;animation:pjLine 1.4s cubic-bezier(.7,0,.2,1) both}
-@supports (animation-timeline: view()){
-  .pj-rv{animation:pjFade linear both;animation-timeline:view();animation-range:entry 0% cover 26%}
-  .pj-rail{transform-origin:top;animation:pjGrow linear both;animation-timeline:view();animation-range:entry 10% cover 70%}
-}
+
+/* ---------- page intro ---------- */
+.pj-intro-screen{display:none}
+.js .pj-intro-screen{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:var(--royal);color:var(--white);animation:introOut .9s cubic-bezier(.76,0,.24,1) .85s forwards}
+.pj-intro-mono{width:76px;height:76px;border-radius:999px;border:1px solid var(--silver);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;animation:introMono .8s cubic-bezier(.2,.7,.1,1) both}
+.pj-intro-name{overflow:hidden;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:.32em}
+.pj-intro-name span{display:block;animation:pjRise .8s cubic-bezier(.2,.7,.1,1) .15s both}
+.pj-intro-line{width:120px;height:2px;background:var(--orange);transform-origin:left;animation:pjLine .7s cubic-bezier(.7,0,.2,1) .2s both}
+@keyframes introOut{to{transform:translateY(-100%);visibility:hidden}}
+@keyframes introMono{from{opacity:0;transform:scale(.6) rotate(-20deg)}to{opacity:1;transform:none}}
+/* hero + facts wait behind the intro, then play */
+.is-loading .pj-hero,.is-loading .pj-hero *,.is-loading .pj-facts-in{animation-play-state:paused!important}
+
+/* scroll progress line */
+.pj-progress{display:none}
+.js .pj-progress{display:block;position:fixed;left:0;right:0;top:0;z-index:150;height:3px;background:var(--orange);transform:scaleX(0);transform-origin:left;pointer-events:none}
+
+/* ---------- scroll reveals (translate/scale props, so hover transforms keep working) ---------- */
+@keyframes rvUp{from{opacity:0;translate:0 46px}to{opacity:1;translate:0 0}}
+@keyframes rvLeft{from{opacity:0;translate:-70px 0}to{opacity:1;translate:0 0}}
+@keyframes rvRight{from{opacity:0;translate:70px 0}to{opacity:1;translate:0 0}}
+@keyframes rvZoom{from{opacity:0;scale:.86;translate:0 26px}to{opacity:1;scale:1;translate:0 0}}
+@keyframes rvWord{from{translate:0 110%}to{translate:0 0}}
+@keyframes rvRow{from{opacity:0;translate:-24px 0}to{opacity:1;translate:0 0}}
+@keyframes pjCurtain{from{transform:scaleY(1)}to{transform:scaleY(0)}}
+@keyframes pjKen{from{scale:1.18}to{scale:1}}
+.js .pj-rv{opacity:0}
+.js .pj-rv.is-in{animation:rvUp 1s cubic-bezier(.2,.7,.1,1) var(--d,0s) both}
+.js .pj-rv--left.is-in{animation-name:rvLeft;animation-duration:1.2s}
+.js .pj-rv--right.is-in{animation-name:rvRight;animation-duration:1.2s}
+.js .pj-rv--zoom.is-in{animation-name:rvZoom}
+/* label lines draw in */
+.js .pj-label::before{scale:0 1;transform-origin:left;transition:scale .9s cubic-bezier(.7,0,.2,1) .15s}
+.js .pj-label.is-in::before{scale:1 1}
+/* headings rise word by word */
+.pj-w{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .08em .14em 0;margin:0 -.08em -.14em 0}
+.pj-w>span{display:inline-block;translate:0 110%}
+.pj-split.is-in .pj-w>span{animation:rvWord .95s cubic-bezier(.2,.7,.1,1) var(--d,0s) both}
+/* card photos: a royal curtain lifts, photo settles */
+.pj-card-tag{z-index:2}
+.js .pj-card-img::after{content:"";position:absolute;inset:0;z-index:1;background:var(--royal);transform-origin:top}
+.js .pj-card.is-in .pj-card-img::after{animation:pjCurtain 1.1s cubic-bezier(.7,0,.2,1) calc(var(--d,0s) + .25s) both}
+.js .pj-card.is-in .pj-card-img img{animation:pjKen 1.8s cubic-bezier(.2,.6,.2,1) calc(var(--d,0s) + .25s) both}
+/* table rows slide in one by one */
+.js .pj-table tbody tr{opacity:0}
+.js .pj-tablecard.is-in .pj-table tbody tr{animation:rvRow .6s cubic-bezier(.2,.7,.1,1) calc(.35s + var(--i,0) * .06s) both}
+/* milestones: the rail grows as you scroll, dots pop in */
+.js .pj-rail{transform-origin:top;transform:scaleY(0)}
+.js .pj-mile-row::before{scale:0;transition:scale .6s cubic-bezier(.3,1.6,.5,1) calc(var(--d,0s) + .35s)}
+.js .pj-mile-row.is-in::before{scale:1}
+.pj-fact b{font-variant-numeric:tabular-nums}
+main{overflow-x:clip}
+@media (max-width:700px){.js .pj-rv--left.is-in,.js .pj-rv--right.is-in{animation-name:rvUp}}
 
 /* ---------- hero ---------- */
 .pj-hero{position:relative;overflow:hidden;background:var(--royal);color:var(--white)}
@@ -182,6 +239,12 @@ img{display:block;max-width:100%}
 </style>
 </head>
 <body>
+<!-- <div class="pj-intro-screen" aria-hidden="true">
+  <span class="pj-intro-mono">NJ</span>
+  <span class="pj-intro-name"><span>NITU JOSHI</span></span>
+  <span class="pj-intro-line"></span>
+</div> -->
+<div class="pj-progress" aria-hidden="true"></div>
 
 <div style="background: #F5F7FA; color: #11223F; font-family: Jost, system-ui, sans-serif; font-weight: 300">
 
@@ -237,13 +300,13 @@ img{display:block;max-width:100%}
 
       <!-- 01 DESIGN -->
       <section class="pj-ch" id="design" aria-labelledby="h-design">
-        <div class="pj-ch-side"><div class="pj-sticky pj-rv"><span class="pj-num" aria-hidden="true">01</span><h2 id="h-design">Design</h2></div></div>
+        <div class="pj-ch-side"><div class="pj-sticky"><span class="pj-num pj-rv pj-rv--zoom" aria-hidden="true">01</span><h2 class="pj-split" id="h-design">Design</h2></div></div>
         <div class="pj-ch-main">
           <p class="pj-intro pj-rv">Fashion, costume and contemporary jewellery designer for film, television and social media personalities.</p>
-          <div class="pj-rv" style="display:flex;flex-direction:column;gap:14px">
-            <p class="pj-label">Has worked with</p>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <p class="pj-label pj-rv">Has worked with</p>
             <div class="pj-names">
-              <span class="pj-name">Geeta Kapur</span><span class="pj-name">Sanjay Dutt</span><span class="pj-name">Namrata Shirodkar</span><span class="pj-name">Jackie Shroff</span><span class="pj-name">Bhagyashree</span>
+              <span class="pj-name pj-rv pj-rv--zoom">Geeta Kapur</span><span class="pj-name pj-rv pj-rv--zoom">Sanjay Dutt</span><span class="pj-name pj-rv pj-rv--zoom">Namrata Shirodkar</span><span class="pj-name pj-rv pj-rv--zoom">Jackie Shroff</span><span class="pj-name pj-rv pj-rv--zoom">Bhagyashree</span>
             </div>
           </div>
         </div>
@@ -251,7 +314,7 @@ img{display:block;max-width:100%}
 
       <!-- 02 FILM & MEDIA -->
       <section class="pj-ch" id="film-media" aria-labelledby="h-film">
-        <div class="pj-ch-side"><div class="pj-sticky pj-rv"><span class="pj-num" aria-hidden="true">02</span><h2 id="h-film">Film &amp; Media</h2></div></div>
+        <div class="pj-ch-side"><div class="pj-sticky"><span class="pj-num pj-rv pj-rv--zoom" aria-hidden="true">02</span><h2 class="pj-split" id="h-film">Film &amp; Media</h2></div></div>
         <div class="pj-ch-main">
           <p class="pj-intro pj-rv">Producer across film, media and entertainment.</p>
 
@@ -262,7 +325,7 @@ img{display:block;max-width:100%}
               <div class="pj-card-body">
                 <h3>Ebina Entertainment</h3>
                 <p>A Mumbai-based film production house specialising in films, ads and digital content — bringing visionary stories to life. Believes films have the power to uplift, amuse and leave an impression.</p>
-                <a href="gallery.php#ebina" class="pj-more">View More <i aria-hidden="true">→</i></a>
+                <a href="ebina.php" class="pj-more">View More <i aria-hidden="true">→</i></a>
               </div>
             </article>
             <article class="pj-card pj-rv">
@@ -309,20 +372,20 @@ img{display:block;max-width:100%}
 
           <p class="pj-label pj-rv">Featured projects</p>
           <div class="pj-films">
-            <article class="pj-film is-lead pj-rv">
+            <article class="pj-film is-lead pj-rv pj-rv--zoom">
               <small>Feature film</small>
               <h4>Dharamraobaba Atram — Dilon Ka Raja</h4>
               <p>Portrays the journey of a remarkable individual who rises to become the king of Aheri, a tribal state — overcoming early adversity to transform the lives of tribal communities across Gadchiroli, Maharashtra.</p>
               <p class="pj-slogan">“Jal, Jungle aur Zameen Hamara Hai”<span>Water, Forest, and Land are Ours</span></p>
               <p>The trailer launch, held at Mumbai's Taj Hotel, was attended by MLA Sandeep Dhurve, Ministers Anil Patil and Aditi Sunil Tatkare, and guests including Abhimanyu, Nisha Jamwal and Dinesh Waghmare.</p>
             </article>
-            <article class="pj-film pj-rv">
+            <article class="pj-film pj-rv pj-rv--left">
               <small>Feature film · 2010 · Vedansh Entertainment</small>
               <h4>Bhunsaara — Roshni Ki Pehli Kiran</h4>
               <p>Directed by Chander Behl. Starring:</p>
               <div class="pj-cast"><span>Kiran Kumar</span><span>Dharmesh Vyas</span><span>Resham Tipnis</span><span>Mayank Gandhi</span><span>Pramod Moutho</span><span>Jennifer John</span><span>Krip Suri</span><span>Anil Vyas</span><span>Anju</span></div>
             </article>
-            <article class="pj-film pj-rv">
+            <article class="pj-film pj-rv pj-rv--right">
               <small>Thriller · 2018 · Vedansh Entertainment</small>
               <h4>Yaksh</h4>
               <p>Directed by Mukul Abhyankar. Starring:</p>
@@ -339,15 +402,15 @@ img{display:block;max-width:100%}
 
       <!-- 03 ENTERPRISE -->
       <section class="pj-ch" id="enterprise" aria-labelledby="h-ent">
-        <div class="pj-ch-side"><div class="pj-sticky pj-rv"><span class="pj-num" aria-hidden="true">03</span><h2 id="h-ent">Enterprise</h2></div></div>
+        <div class="pj-ch-side"><div class="pj-sticky"><span class="pj-num pj-rv pj-rv--zoom" aria-hidden="true">03</span><h2 class="pj-split" id="h-ent">Enterprise</h2></div></div>
         <div class="pj-ch-main">
           <p class="pj-intro pj-rv">Business entrepreneur extending the Ebina name beyond entertainment.</p>
           <div class="pj-ent">
-            <article class="pj-ent-card pj-rv">
+            <article class="pj-ent-card pj-rv pj-rv--left">
               <span class="pj-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3l3 18 3-18"/></svg></span>
               <div><h3>Ebina Jewel</h3><p>An online store offering customised, celebrity-style jewellery designs.</p></div>
             </article>
-            <article class="pj-ent-card pj-rv">
+            <article class="pj-ent-card pj-rv pj-rv--right">
               <span class="pj-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-5h4v5"/></svg></span>
               <div><h3>Ebina Hotel</h3><p>[One line about the hotel]</p></div>
             </article>
@@ -357,16 +420,16 @@ img{display:block;max-width:100%}
 
       <!-- 04 MILESTONES -->
       <section class="pj-ch" id="milestones" aria-labelledby="h-mile">
-        <div class="pj-ch-side"><div class="pj-sticky pj-rv"><span class="pj-num" aria-hidden="true">04</span><h2 id="h-mile">Milestones</h2></div></div>
+        <div class="pj-ch-side"><div class="pj-sticky"><span class="pj-num pj-rv pj-rv--zoom" aria-hidden="true">04</span><h2 class="pj-split" id="h-mile">Milestones</h2></div></div>
         <div class="pj-ch-main">
           <div class="pj-mile">
             <div class="pj-mile-rail pj-rail" aria-hidden="true"></div>
-            <div class="pj-mile-row pj-rv"><b>[YEAR]</b><span>[First major design project in film or television]</span></div>
-            <div class="pj-mile-row pj-rv"><b>[YEAR]</b><span>[Founded Ebina Entertainment]</span></div>
-            <div class="pj-mile-row pj-rv"><b>2010</b><span>Vedansh Entertainment's debut film "Bhunsaara — Roshni Ki Pehli Kiran".</span></div>
-            <div class="pj-mile-row pj-rv"><b>2018</b><span>Thriller "Yaksh" released (dir. Mukul Abhyankar).</span></div>
-            <div class="pj-mile-row pj-rv"><b>[YEAR]</b><span>[Launched Ebina Jewel / Ebina Hotel]</span></div>
-            <div class="pj-mile-row is-key pj-rv"><b>2022</b><span>Established MIAM Charitable Trust — the start of the second journey.</span></div>
+            <div class="pj-mile-row pj-rv pj-rv--left"><b>[YEAR]</b><span>[First major design project in film or television]</span></div>
+            <div class="pj-mile-row pj-rv pj-rv--left"><b>[YEAR]</b><span>[Founded Ebina Entertainment]</span></div>
+            <div class="pj-mile-row pj-rv pj-rv--left"><b>2010</b><span>Vedansh Entertainment's debut film "Bhunsaara — Roshni Ki Pehli Kiran".</span></div>
+            <div class="pj-mile-row pj-rv pj-rv--left"><b>2018</b><span>Thriller "Yaksh" released (dir. Mukul Abhyankar).</span></div>
+            <div class="pj-mile-row pj-rv pj-rv--left"><b>[YEAR]</b><span>[Launched Ebina Jewel / Ebina Hotel]</span></div>
+            <div class="pj-mile-row is-key pj-rv pj-rv--left"><b>2022</b><span>Established MIAM Charitable Trust — the start of the second journey.</span></div>
           </div>
         </div>
       </section>
@@ -375,8 +438,8 @@ img{display:block;max-width:100%}
 
   <a href="purpose.php" class="pj-next">
     <span class="pj-next-in">
-      <span><small>Next · Chapter II</small><strong>My Journey of Purpose</strong></span>
-      <span class="pj-arrow" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg></span>
+      <span><small class="pj-rv">Next · Chapter II</small><strong class="pj-split">My Journey of Purpose</strong></span>
+      <span class="pj-arrow pj-rv pj-rv--zoom" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M14 6l6 6-6 6"/></svg></span>
     </span>
   </a>
 
@@ -408,6 +471,108 @@ img{display:block;max-width:100%}
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   Object.keys(byId).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+})();
+</script>
+<script>
+(function () {
+  if (!document.documentElement.classList.contains("js")) return; // reduced motion: page shows as is
+
+  // headings: wrap each word so it can rise on its own
+  document.querySelectorAll(".pj-split").forEach(function (el) {
+    var words = el.textContent.trim().split(/\s+/);
+    el.setAttribute("aria-label", words.join(" "));
+    el.textContent = "";
+    words.forEach(function (w, i) {
+      var outer = document.createElement("span"), inner = document.createElement("span");
+      outer.className = "pj-w"; outer.setAttribute("aria-hidden", "true");
+      inner.textContent = w; inner.style.setProperty("--d", i * 0.08 + "s");
+      outer.appendChild(inner); el.appendChild(outer);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+    });
+  });
+  // table rows get their order
+  document.querySelectorAll(".pj-table tbody tr").forEach(function (tr, i) { tr.style.setProperty("--i", i); });
+
+  // facts: count up from 0 (keeps the comma in 40,000)
+  var counters = [];
+  document.querySelectorAll(".pj-fact b").forEach(function (b) {
+    var t = b.firstChild, raw = t && t.nodeValue, n = raw && parseInt(raw.replace(/,/g, ""), 10);
+    if (!n) return;
+    counters.push({ node: t, to: n, comma: raw.indexOf(",") > -1, el: b });
+    t.nodeValue = "0";
+  });
+  function count(c) {
+    var start = null, dur = 1800;
+    function step(ts) {
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / dur), v = Math.round(c.to * (1 - Math.pow(1 - p, 3)));
+      c.node.nodeValue = c.comma ? v.toLocaleString("en-US") : String(v);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  var targets = document.querySelectorAll(".pj-rv, .pj-label, .pj-split, .pj-fact b");
+  function reveal(el, delay) {
+    if (el.classList.contains("is-in")) return;
+    if (delay && !el.style.getPropertyValue("--d")) el.style.setProperty("--d", delay + "s");
+    el.classList.add("is-in");
+    counters.forEach(function (c) {
+      if (c.el === el) setTimeout(function () { count(c); }, Math.max(0, 2300 - performance.now()));
+    });
+  }
+  if (!("IntersectionObserver" in window)) {
+    targets.forEach(function (el) { reveal(el, 0); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      // things that appear together come in one after another
+      entries.filter(function (e) { return e.isIntersecting; }).forEach(function (e, i) {
+        reveal(e.target, Math.min(i * 0.09, 0.6));
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.12 });
+    targets.forEach(function (el) { io.observe(el); });
+  }
+
+  // if the site header stays on top, keep the chapter bar and sticky titles below it
+  var header = document.querySelector("body header"), sub = document.querySelector(".pj-sub");
+  function placeBars() {
+    if (!header || !sub) return;
+    var pos = getComputedStyle(header).position;
+    if (pos !== "sticky" && pos !== "fixed") return;
+    var h = header.offsetHeight, total = h + sub.offsetHeight;
+    sub.style.top = h + "px";
+    document.querySelectorAll(".pj-ch").forEach(function (c) { c.style.scrollMarginTop = total + "px"; });
+    document.querySelectorAll(".pj-ch-side .pj-sticky").forEach(function (c) { c.style.top = total + 28 + "px"; });
+  }
+  placeBars(); window.addEventListener("resize", placeBars);
+
+  // scroll progress, hero parallax and the milestones rail
+  var bar = document.querySelector(".pj-progress"), hero = document.querySelector(".pj-hero"),
+    heroText = document.querySelector(".pj-hero-text"), index = document.querySelector(".pj-index"),
+    mile = document.querySelector(".pj-mile"), rail = document.querySelector(".pj-rail"), ticking = false;
+  function onScroll() {
+    var y = window.scrollY, vh = window.innerHeight, max = document.documentElement.scrollHeight - vh;
+    if (bar) bar.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")";
+    if (hero && y < hero.offsetHeight) {
+      if (heroText) {
+        heroText.style.translate = "0 " + y * 0.18 + "px";
+        heroText.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.9)));
+      }
+      if (index) index.style.translate = "0 " + y * -0.08 + "px";
+    }
+    if (mile && rail) {
+      var r = mile.getBoundingClientRect(), p = (vh * 0.75 - r.top) / r.height;
+      rail.style.transform = "scaleY(" + Math.max(0, Math.min(1, p)) + ")";
+    }
+    ticking = false;
+  }
+  window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+
+  var intro = document.querySelector(".pj-intro-screen");
+  if (intro) intro.addEventListener("animationend", function (e) { if (e.animationName === "introOut") intro.remove(); });
 })();
 </script>
 <script src="assets/nav.js"></script>
